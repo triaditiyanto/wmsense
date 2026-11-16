@@ -1,0 +1,146 @@
+/* =====================================================================
+   WMSense — alur operator mobile (wizard + panduan animasi)
+   Dimuat oleh layouts/mobile.blade.php setelah wms.css (memakai token --o-*).
+
+   Pola animasi: gaya dasar = KEADAAN AKHIR, @keyframes hanya mendefinisikan "from".
+   Jadi bila animasi dimatikan (prefers-reduced-motion) semua tetap tampil benar.
+   ===================================================================== */
+
+/* ------------------------------------------------------------ wizard */
+.m-help { border: 0; background: var(--o-brand-light); color: var(--o-brand-dark); border-radius: 99px; padding: .25rem .7rem; font-size: .8rem; font-weight: 600; white-space: nowrap; }
+
+.m-stepper { list-style: none; padding: 0; margin: .25rem 0 .7rem; display: grid; grid-template-columns: repeat(5, 1fr); scroll-margin-top: 72px; }
+.m-stepper li { position: relative; }
+.m-stepper li:not(:first-child)::before { content: ''; position: absolute; top: 16px; right: 50%; width: 100%; height: 3px; background: rgba(118, 128, 150, .2); transition: background-color .3s; }
+.m-stepper li.is-done::before, .m-stepper li.is-current::before { background: var(--o-brand); }
+.m-stepper button { position: relative; z-index: 1; width: 100%; border: 0; background: none; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--o-muted); font-size: .72rem; font-weight: 600; }
+.m-stepper-dot { width: 34px; height: 34px; border-radius: 50%; background: #fff; border: 2px solid rgba(118, 128, 150, .3); display: flex; align-items: center; justify-content: center; font-size: .85rem; transition: all .3s var(--o-ease); }
+.m-stepper .is-current button { color: var(--o-brand-dark); }
+.m-stepper .is-current .m-stepper-dot { background: var(--o-brand-grad); border-color: transparent; color: #fff; transform: scale(1.08); box-shadow: 0 0 0 5px rgba(0, 122, 255, .18); }
+.m-stepper .is-done .m-stepper-dot { background: #34c759; border-color: transparent; color: #fff; }
+.m-stepper .is-done button { color: #1a7f37; }
+
+.m-chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .7rem; align-items: center; }
+.m-chips:empty { display: none; }
+.m-chip { border: 0; display: inline-flex; align-items: center; gap: .35rem; padding: .35rem .7rem; border-radius: 99px; background: rgba(255, 255, 255, .88); box-shadow: var(--o-shadow-sm); font-size: .82rem; font-weight: 600; color: var(--o-heading); }
+.m-chip > i:first-child { color: var(--o-brand); }
+.m-chip-edit { font-size: .68rem; color: var(--o-muted); }
+.m-chip.is-sm { padding: .2rem .65rem; font-size: .78rem; background: var(--o-brand-light); box-shadow: none; color: var(--o-brand-dark); }
+.m-alert-full { margin-bottom: .75rem; }
+
+.m-panel {
+    background: rgba(255, 255, 255, .82); -webkit-backdrop-filter: var(--o-glass-blur); backdrop-filter: var(--o-glass-blur);
+    border: 1px solid var(--o-glass-border); border-radius: 20px; box-shadow: var(--o-shadow-sm); padding: .9rem 1rem 1.1rem;
+}
+.m-panel.enter-fwd { animation: m-in-fwd .32s var(--o-ease); }
+.m-panel.enter-back { animation: m-in-back .32s var(--o-ease); }
+
+/* coach = panduan singkat di setiap langkah */
+.m-coach { display: flex; gap: .75rem; align-items: flex-start; padding: .75rem; border-radius: 16px; margin-bottom: .8rem; background: linear-gradient(135deg, rgba(0, 122, 255, .12), rgba(0, 122, 255, .03)); }
+.m-coach-ico { position: relative; overflow: hidden; width: 46px; height: 46px; flex-shrink: 0; border-radius: 14px; background: var(--o-brand-grad); color: #fff; font-size: 1.4rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px -8px rgba(0, 90, 220, .8); }
+.m-coach-ico.is-scan::after { content: ''; position: absolute; left: 7px; right: 7px; top: 8px; height: 2px; border-radius: 2px; background: #ff453a; box-shadow: 0 0 6px 1px rgba(255, 69, 58, .9); animation: m-laser 1.3s ease-in-out infinite alternate; }
+.m-coach-ico.is-pin i { animation: m-bob 1.6s ease-in-out infinite; }
+.m-coach-ico.is-count i, .m-coach-ico.is-check i { animation: m-pulse 1.8s ease-in-out infinite; }
+.m-coach-title { font-weight: 700; color: var(--o-heading); line-height: 1.25; }
+.m-coach-text { font-size: .85rem; line-height: 1.4; margin-top: .15rem; }
+.m-coach-more { border: 0; background: none; padding: 0; margin-top: .35rem; color: var(--o-brand); font-size: .82rem; font-weight: 600; }
+
+.m-coach-note, .m-check { display: flex; gap: .5rem; align-items: flex-start; font-size: .84rem; line-height: 1.4; padding: .55rem .75rem; border-radius: 12px; }
+.m-coach-note { margin-bottom: .8rem; animation: m-in-fwd .3s var(--o-ease); }
+.m-check { margin-top: .5rem; }
+.m-coach-note.is-info, .m-check.is-info { background: var(--o-brand-light); color: var(--o-brand-dark); }
+.m-coach-note.is-warning, .m-check.is-warning { background: rgba(255, 149, 0, .13); color: #8a5300; }
+.m-check.is-danger { background: rgba(255, 59, 48, .1); color: #b42318; }
+.m-check.is-success { background: rgba(52, 199, 89, .13); color: #1a7f37; }
+
+/* kartu dock + kapasitas */
+.m-docks { display: grid; grid-template-columns: repeat(2, 1fr); gap: .6rem; }
+.m-dock { position: relative; text-align: left; border: 2px solid transparent; background: #fff; border-radius: 16px; padding: .7rem .8rem; box-shadow: var(--o-shadow-sm); display: flex; flex-direction: column; gap: .4rem; color: var(--o-heading); transition: border-color .2s, box-shadow .2s, transform .15s; }
+.m-dock:active { transform: scale(.97); }
+.m-dock.is-selected { border-color: var(--o-brand); box-shadow: 0 0 0 4px rgba(0, 122, 255, .15); }
+.m-dock.is-full { background: #fff7f6; }
+.m-dock-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .3rem; font-size: 1.05rem; }
+.m-dock-head b { white-space: nowrap; }
+.m-dock-tag { font-size: .62rem; font-weight: 700; padding: .12rem .45rem; border-radius: 99px; background: rgba(52, 199, 89, .15); color: #1a7f37; text-transform: uppercase; letter-spacing: .03em; }
+.m-dock-tag.is-full { background: rgba(255, 59, 48, .14); color: #c4281c; }
+.m-dock-bar { height: 7px; border-radius: 99px; background: rgba(118, 128, 150, .16); overflow: hidden; }
+.m-dock-bar span { display: block; height: 100%; border-radius: 99px; transition: width .6s var(--o-ease); }
+.m-dock-used { font-size: .78rem; color: var(--o-muted); }
+.m-dock-check { position: absolute; top: -9px; right: -9px; color: var(--o-brand); font-size: 1.35rem; background: #fff; border-radius: 50%; line-height: 1; opacity: 0; transform: scale(.4); transition: all .25s var(--o-ease); }
+.m-dock.is-selected .m-dock-check { opacity: 1; transform: none; }
+
+/* tombol scan besar */
+.m-bigscan { position: relative; overflow: hidden; width: 100%; border: 0; border-radius: 20px; padding: 1.4rem 1rem 1.1rem; margin-bottom: .75rem; display: flex; flex-direction: column; align-items: center; gap: .35rem; color: #fff; font-weight: 600; background: var(--o-brand-grad); box-shadow: 0 14px 30px -14px rgba(0, 90, 220, .85); }
+.m-bigscan i { position: relative; z-index: 1; font-size: 2.6rem; line-height: 1; }
+.m-bigscan > span:last-child { position: relative; z-index: 1; }
+.m-bigscan:active { transform: scale(.98); }
+.m-bigscan-ring { position: absolute; left: 50%; top: 2.7rem; width: 70px; height: 70px; margin: -35px 0 0 -35px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .75); animation: m-ring 2.2s ease-out infinite; }
+
+.m-or { display: flex; align-items: center; gap: .6rem; color: var(--o-muted); font-size: .8rem; margin: 1rem 0 .75rem; }
+.m-or::before, .m-or::after { content: ''; flex: 1; height: 1px; background: var(--o-border); }
+.m-choice { width: 100%; display: flex; align-items: center; gap: .75rem; text-align: left; border: 2px dashed rgba(0, 122, 255, .35); background: rgba(0, 122, 255, .04); border-radius: 16px; padding: .85rem 1rem; color: var(--o-heading); transition: all .2s; }
+.m-choice > i:first-child { font-size: 1.6rem; color: var(--o-brand); }
+.m-choice > span { flex: 1; }
+.m-choice small { display: block; color: var(--o-muted); font-size: .8rem; }
+.m-choice-check { color: var(--o-brand); font-size: 1.3rem; opacity: 0; }
+.m-choice.is-selected { border-style: solid; border-color: var(--o-brand); background: rgba(0, 122, 255, .08); }
+.m-choice.is-selected .m-choice-check { opacity: 1; }
+
+.m-pick { width: 100%; display: flex; justify-content: space-between; gap: .75rem; text-align: left; border: 0; background: #fff; border-radius: 14px; padding: .65rem .85rem; box-shadow: var(--o-shadow-sm); color: var(--o-heading); }
+.m-pick:active { transform: scale(.98); }
+.m-pick.is-done { opacity: .6; }
+
+.m-review { padding: .3rem 1rem; }
+.m-review-row { display: flex; align-items: center; gap: .75rem; padding: .65rem 0; border-top: 1px solid var(--o-border); }
+.m-review-row:first-child { border-top: 0; }
+.m-review-k { width: 74px; flex-shrink: 0; font-size: .8rem; color: var(--o-muted); }
+.m-review-v { flex: 1; min-width: 0; color: var(--o-heading); }
+.m-review-edit { border: 0; background: none; color: var(--o-brand); font-size: .8rem; font-weight: 600; padding: .25rem 0 .25rem .5rem; }
+
+.m-done { text-align: center; padding: 1.6rem 1rem 1.2rem; }
+.m-done-check { display: block; width: 96px; height: 96px; margin: 0 auto .8rem; }
+.m-done-check circle, .g-check circle { fill: none; stroke: #34c759; stroke-width: 3; stroke-dasharray: 150; stroke-dashoffset: 0; }
+.m-done-check path, .g-check path { fill: none; stroke: #34c759; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 40; stroke-dashoffset: 0; }
+.m-done.play circle { animation: g-draw-c .6s .1s both; }
+.m-done.play path { animation: g-draw-p .35s .6s both; }
+.m-done-title { font-size: 1.25rem; font-weight: 700; color: var(--o-heading); }
+.m-done-text { margin-top: .25rem; }
+.m-done .m-check { text-align: left; }
+.m-btn-lg { border-radius: 16px; min-height: 56px; font-weight: 700; }
+.m-btn-lg small { font-size: .75rem; opacity: .85; }
+
+.m-sticky-action[hidden] { display: none; }
+.m-wiz-bar { display: flex; gap: .6rem; max-width: 640px; margin: 0 auto; }
+.m-sticky-action .m-wiz-bar .btn { display: inline-flex; align-items: center; justify-content: center; gap: .35rem; margin: 0; max-width: none; }
+.m-sticky-action .m-wiz-bar .m-wiz-back { flex: 0 0 56px; width: 56px; font-size: 1.2rem; }
+.m-shake { animation: m-shake .5s; border-color: #ff9500 !important; }
+
+@keyframes m-in-fwd { from { opacity: 0; transform: translateX(26px); } }
+@keyframes m-in-back { from { opacity: 0; transform: translateX(-26px); } }
+@keyframes m-laser { from { top: 8px; } to { top: 36px; } }
+@keyframes m-bob { 50% { transform: translateY(-4px); } }
+@keyframes m-pulse { 50% { transform: scale(1.14); } }
+@keyframes m-ring { 0% { transform: scale(.6); opacity: .85; } 100% { transform: scale(2.8); opacity: 0; } }
+@keyframes m-shake { 20%, 60% { transform: translateX(-6px); } 40%, 80% { transform: translateX(6px); } }
+
+/* HP dengan "kurangi gerakan": tampilkan keadaan akhir tanpa animasi */
+@media (prefers-reduced-motion: reduce) {
+    .m-panel, .m-coach-note, .m-coach-ico *, .m-coach-ico::after, .m-bigscan-ring, .m-done *, .m-shake { animation: none !important; transition: none !important; }
+}
+
+/* ------------------------------------------------------------ putaway mobile */
+.m-stepper.m-stepper-3 { grid-template-columns: repeat(3, 1fr); }
+.m-target { display: flex; flex-direction: column; align-items: center; gap: .15rem; padding: 1.1rem 1rem; margin-bottom: .6rem; border-radius: 20px; text-align: center; color: #fff; background: var(--o-brand-grad); box-shadow: 0 14px 30px -14px rgba(0, 90, 220, .85); }
+.m-target-lbl { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; opacity: .85; }
+.m-target-code { font-family: ui-monospace, monospace; font-size: 2.2rem; font-weight: 800; letter-spacing: .02em; line-height: 1.15; }
+.m-target-why { font-size: .85rem; opacity: .9; }
+.m-target.is-sm { padding: .6rem 1rem; }
+.m-target.is-sm .m-target-code { font-size: 1.6rem; }
+.m-target.is-empty { background: linear-gradient(135deg, #ff9f0a, #e07800); }
+/* catatan coach berisi teks campur <b>/<button>: alirkan sebagai blok, bukan flex */
+.m-coach-note { display: block; }
+.m-coach-note > .bi:first-child { margin-right: .3rem; }
+
+/* Picking: pilihan aktif (staging / baris) */
+.m-chip.is-active { background: var(--o-brand); color: #fff; }
+.m-pick.is-active { outline: 2px solid var(--o-brand); outline-offset: -2px; }
